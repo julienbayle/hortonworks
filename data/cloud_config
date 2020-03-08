@@ -1,0 +1,27 @@
+---
+cloud_config:
+  name_suffix: ''
+  zone: nova
+  admin_username: centos
+  ssh:
+    keyname: id_ovh_cloud
+    privatekey: ~/.ssh/id_ovh_cloud
+
+nodes:
+  - host_group: "hdp-master"
+    count: 1
+    image: Centos 7
+    flavor: r2-15
+    public_ip: false
+
+  - host_group: "hdp-slave"
+    count: 2
+    image: Centos 7
+    flavor: s1-4
+    public_ip: false
+
+  - host_group: "hdp-edge"
+    count: 0
+    image: Centos 7
+    flavor: s1-4
+    public_ip: false

@@ -22,7 +22,7 @@ fi
 # Add our SSH key to Openstack nova keypairs
 KEY_COUNT=`nova keypair-list | grep id_ovh_cloud | wc -l`
 if [ "$KEY_COUNT" != "1" ]; then
-    nova keypair-add --pub-key ~/.ssh/id_ovh_cloud.pub id_ovh_cloud
+    nova keypair-add --pub-key ~/data/id_ovh_cloud.pub id_ovh_cloud
 fi
 
 # Configure 
@@ -38,6 +38,6 @@ fi
 cd ~/ansible-hortonworks
 ./build_cloud.sh 
 
-# Install HortonWorks ambari and configure the server (Uses hortonworks_config parameters)
+# Install HortonWorks ambari and install the services (Uses hortonworks_config parameters)
 cd ~/ansible-hortonworks
 ./install_cluster.sh

@@ -5,7 +5,7 @@ cloud_config:
   admin_username: centos
   ssh:
     keyname: id_ovh_cloud
-    privatekey: ~/.ssh/id_ovh_cloud
+    privatekey: ~/data/id_ovh_cloud
 
 nodes:
   - host_group: "hdp-master"
@@ -20,8 +20,14 @@ nodes:
     flavor: s1-4
     public_ip: false
 
-  - host_group: "hdp-edge"
-    count: 0
+  - host_group: "hdp-stream"
+    count: 1
+    image: Centos 7
+    flavor: s1-4
+    public_ip: false
+
+  - host_group: "hdp-bi"
+    count: 1
     image: Centos 7
     flavor: s1-4
     public_ip: false

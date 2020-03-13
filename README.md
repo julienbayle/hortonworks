@@ -6,7 +6,7 @@ Purpose
 
 This project provides a Docker image to easily install the Hortonworks Data Platform. The sample configuration file and the following steps have been tested with success with OVH public cloud openstack infrastructure provider.
 
-> This project is for personnal and temporary tests purpose (Firewall is disabled, no private network, no storage persistance, no backups, built on a fork of the official hortonworks ansible playbooks to fix OVH Cloud installation issues, ...)
+> This project is for personnal and temporary tests purpose (Firewall is disabled, no private network, no storage persistance, no backups, built on a fork of the official hortonworks ansible playbooks, ...)
 
 Installation steps
 -----
@@ -16,7 +16,7 @@ Installation steps
 3. Create a new Open Stack User with administrative priviledges
 4. Download the "OpenStack RC" the user for GRA7 zone (This zone works) and save it as `data/openrc.sh`
 5. (Optional) Edit `data/openrc.sh` to save your password instead of using a prompt
-6. Create an SSH key for this projet `ssh-keygen -b 4096` and save it as `~/.ssh/id_ovh_cloud`
+6. Create an SSH key for this projet `ssh-keygen -b 4096` and save it as `data/id_ovh_cloud`
 7. Publish your SSH Public Key into your Public cloud project (Project Management > SSH Keys)
 8. Update data/cloud_config and data/hortonworks_config files to fit your needs [Documentation](https://github.com/hortonworks/ansible-hortonworks/blob/master/INSTALL_OpenStack.md) 
 9. Build your cluster using docker : `./run.sh autodeploy`
@@ -42,7 +42,7 @@ Execute an Openstack command using the docker tools (For instance, show cluster 
 
 Connect to one machine into the cluster via SSH using the projet key
 ```bash
-ssh centos@MACHINE_IP -i ~/.ssh/id_ovh_cloud
+ssh centos@MACHINE_IP -i data/id_ovh_cloud
 ```
 
 Optional steps

@@ -1,6 +1,8 @@
 #!/bin/bash
 
+echo "Building docker image..."
 docker build . -q -t hw-install-tools
+echo "Docker image ready"
 
 HOME="$( cd ~ && pwd )"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"

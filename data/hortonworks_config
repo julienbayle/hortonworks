@@ -11,7 +11,7 @@ hdp_version: '3.1.4.0'                                    # must be the 4-part f
 hdp_build_number: 'auto'                                  # the HDP build number from docs.hortonworks.com (if set to 'auto', Ansible will try to get it from the repository)
 
 hdf_version: '3.4.1.1'                                    # must be the 4-part full version number
-hdf_build_number: 'auto'                                  # the HDF build number from docs.hortonworks.com (if set to 'auto', Ansible will try to get it from the repository)
+hdf_build_number: 'auto'                             # the HDF build number from docs.hortonworks.com (if set to 'auto', Ansible will try to get it from the repository)
 
 hdpsearch_version: '4.0.0'                                # must be the full version number
 hdpsearch_build_number: '400'                             # the HDP Search build number from docs.hortonworks.com
@@ -23,8 +23,8 @@ repo_base_url: 'http://public-repo-1.hortonworks.com'     # change this if using
 ## general configuration ##
 ###########################
 
-external_dns: yes                                         # set to yes to use the existing DNS (when no, it will update the /etc/hosts file - must be set to 'no' when using Azure)
-disable_firewall: yes                                      # set to yes to disable the existing local firewall service (iptables, firewalld, ufw)
+external_dns: yes                                         # Leave Yes, a special hack has been done for OVH install (forked repo)
+disable_firewall: yes                                     # set to yes to disable the existing local firewall service (iptables, firewalld, ufw)
 timezone: UTC
 
 
@@ -44,37 +44,37 @@ oraclejdk_options:                                        # only used when java 
 ## database configuration ##
 ############################
 
-database: 'postgres'                                      # can be set to 'embedded', 'postgres', 'mysql' or 'mariadb'
+database: 'mysql'                                         # can be set to 'embedded', 'postgres', 'mysql' or 'mariadb'
 database_options:
   add_repo: yes                                           # if set to 'no', Ansible will not add a repo file (containing the public URL)
   external_hostname: ''                                   # if this is empty, Ansible will install and prepare the databases on the ambari-server node
   ambari_db_name: 'ambari'
   ambari_db_username: 'ambari'
-  ambari_db_password: 'bigdata'
+  ambari_db_password: '{{ default_password }}'
   hive_db_name: 'hive'
   hive_db_username: 'hive'
-  hive_db_password: 'hive'
+  hive_db_password: '{{ default_password }}'
   oozie_db_name: 'oozie'
   oozie_db_username: 'oozie'
-  oozie_db_password: 'oozie'
+  oozie_db_password: '{{ default_password }}'
   druid_db_name: 'druid'
   druid_db_username: 'druid'
-  druid_db_password: 'druid'
+  druid_db_password: '{{ default_password }}'
   superset_db_name: 'superset'
   superset_db_username: 'superset'
-  superset_db_password: 'superset'
+  superset_db_password: '{{ default_password }}'
   rangeradmin_db_name: 'ranger'
   rangeradmin_db_username: 'ranger'
-  rangeradmin_db_password: 'ranger'
+  rangeradmin_db_password: '{{ default_password }}'
   rangerkms_db_name: 'rangerkms'
   rangerkms_db_username: 'rangerkms'
-  rangerkms_db_password: 'rangerkms'
+  rangerkms_db_password: '{{ default_password }}'
   registry_db_name: 'registry'
   registry_db_username: 'registry'
-  registry_db_password: 'registry'
+  registry_db_password: '{{ default_password }}'
   streamline_db_name: 'streamline'
   streamline_db_username: 'streamline'
-  streamline_db_password: 'streamline'
+  streamline_db_password: '{{ default_password }}'
 
 
 #####################################
@@ -84,7 +84,7 @@ database_options:
 security: 'none'                                          # can be set to 'none', 'mit-kdc', 'ipa' or 'active-directory'
 security_options:
   external_hostname: ''                                   # if this is empty, Ansible will install and prepare the MIT KDC on the Ambari node
-  realm: 'EXAMPLE.COM'
+  realm: 'SMARTDATA.FR'
   admin_principal: 'admin'                                # the Kerberos principal that has the permissions to create new users (don't append the realm)
   admin_password: "{{ default_password }}"
   kdc_master_key: "{{ default_password }}"                # only used when security is set to 'mit-kdc'
@@ -109,10 +109,8 @@ ranger_security_options:                                  # only used if RANGER_
 ## other security configuration ##                        # only useful if blueprint is dynamic
 ##################################
 
-ambari_admin_password: 'admin'                            # the password for the Ambari admin user
-default_password: 'AsdQwe123456'                          # a default password for all required passwords which are not specified in the blueprint,
-                                                          # dependency: NiFi password needs to be at least 12 characters
-
+ambari_admin_password: '{{ default_password }}'           # the password for the Ambari admin user
+                                                          
 atlas_security_options:
   admin_password: "{{ default_password }}"                # the password for the Atlas admin user
 
@@ -146,7 +144,9 @@ accumulo_security_options:
 
 ambari_admin_user: 'admin'
 ambari_admin_default_password: 'admin'                    # no need to change this (unless the Ambari default changes)
-config_recommendation_strategy: 'NEVER_APPLY'             # choose between 'NEVER_APPLY', 'ONLY_STACK_DEFAULTS_APPLY', 'ALWAYS_APPLY', 'ALWAYS_APPLY_DONT_OVERRIDE_CUSTOM_VALUES'
+
+                                                          # choose between 'NEVER_APPLY', 'ONLY_STACK_DEFAULTS_APPLY', 'ALWAYS_APPLY', 'ALWAYS_APPLY_DONT_OVERRIDE_CUSTOM_VALUES'
+config_recommendation_strategy: 'ALWAYS_APPLY_DONT_OVERRIDE_CUSTOM_VALUES'             
 
 smartsense:                                               # Hortonworks subscription details (can be left empty if there is no subscription)
   id: ''
@@ -154,7 +154,7 @@ smartsense:                                               # Hortonworks subscrip
   customer_email: ''
 
 wait: true                                                # wait for the cluster to finish installing
-wait_timeout: 3600                                        # 60 minutes
+wait_timeout: 7200                                        # 120 minutes
 accept_gpl: yes                                           # set to yes to allow Ambari to install GPL licensed libraries
 
 cluster_template_file: 'cluster_template.j2'              # the cluster creation template file
@@ -202,7 +202,6 @@ blueprint_dynamic:                                        # properties for the d
       - ACTIVITY_ANALYZER
       - ACTIVITY_EXPLORER
       - HST_AGENT
-      - NIFI_REGISTRY_MASTER
       - PHOENIX_QUERY_SERVER
       - STORM_UI_SERVER
       - NIMBUS
@@ -219,15 +218,8 @@ blueprint_dynamic:                                        # properties for the d
       - HBASE_REGIONSERVER
       - METRICS_MONITOR
       - HST_AGENT
-  - host_group: "hdp-stream"
-    clients: ['ZOOKEEPER_CLIENT', 'HDFS_CLIENT', 'YARN_CLIENT', 'MAPREDUCE2_CLIENT', 'TEZ_CLIENT', 'SLIDER', 'SQOOP', 'HIVE_CLIENT', 'HCAT', 'OOZIE_CLIENT', 'INFRA_SOLR_CLIENT', 'SPARK2_CLIENT', 'HBASE_CLIENT']
-    services:
-      - KAFKA_BROKER
-      - NIFI_MASTER
-      - HST_AGENT
-      - METRICS_MONITOR
   - host_group: "hdp-bi"
-    clients: ['ZOOKEEPER_CLIENT', 'HDFS_CLIENT', 'YARN_CLIENT', 'MAPREDUCE2_CLIENT', 'TEZ_CLIENT', 'SLIDER', 'SQOOP', 'HIVE_CLIENT', 'HCAT', 'OOZIE_CLIENT', 'INFRA_SOLR_CLIENT', 'SPARK2_CLIENT', 'HBASE_CLIENT']
+    clients: ['ZOOKEEPER_CLIENT', 'HDFS_CLIENT', 'YARN_CLIENT', 'MAPREDUCE2_CLIENT', 'TEZ_CLIENT', 'SQOOP', 'HIVE_CLIENT', 'OOZIE_CLIENT', 'INFRA_SOLR_CLIENT', 'SPARK2_CLIENT', 'HBASE_CLIENT']
     services:
       - DRUID_COORDINATOR
       - DRUID_OVERLORD

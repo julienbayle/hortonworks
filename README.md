@@ -20,7 +20,7 @@ Installation steps
 7. Publish your SSH Public Key into your Public cloud project (Project Management > SSH Keys)
 8. Update data/cloud_config and data/hortonworks_config files to fit your needs [Documentation](https://github.com/hortonworks/ansible-hortonworks/blob/master/INSTALL_OpenStack.md) 
 9. Build your cluster using docker : `./run.sh autodeploy`
-10. Wait for the process to complete (About 1 hour). When the task is "Wait for the cluster to be built", you can follow the installation progress in your browser : MASTER_IP:8080. If the service startup fails, just look at the logs for details or try to start all services again (action available in the Ambari administration menu)
+10. Wait for the process to complete (About 1 hour). When the task is "Wait for the cluster to be built", you can follow the installation progress in your browser : MASTER_IP:8080. If the service startup fails, just look at the logs for details or try to start all services again (action available in the Ambari administration menu). The password of all services is auto generated and saved in `data/password`
 11. You can drop this project when your cluster is ready or keep it for maintenance purpose ;o)
 
 Installation requires about 12Go on slaves and 14Go on the master (disk usage). Also, the master node requires more than 10Go of RAM to start.
@@ -44,6 +44,18 @@ Connect to one machine into the cluster via SSH using the projet key
 ```bash
 ssh centos@MACHINE_IP -i data/id_ovh_cloud
 ```
+Shelve the cluster
+```bash
+./run.sh "source ~/data/openrc.sh && nova shelve"
+```
+
+Delete the cluster 
+```bash
+./run.sh "source ~/data/openrc.sh && nova delete"
+```
+
+Enable the Oozie UI: 
+https://docs.cloudera.com/HDPDocuments/Ambari-2.7.3.0/managing-and-monitoring-ambari/content/amb_enable_the_oozie_ui_on_centos_rhel_oracle_linux_7.html
 
 Optional steps
 --------------

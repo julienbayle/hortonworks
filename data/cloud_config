@@ -20,12 +20,6 @@ nodes:
     flavor: s1-4
     public_ip: false
 
-  - host_group: "hdp-stream"
-    count: 1
-    image: Centos 7
-    flavor: s1-4
-    public_ip: false
-
   - host_group: "hdp-bi"
     count: 1
     image: Centos 7
